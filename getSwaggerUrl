@@ -1,0 +1,24 @@
+#!/opt/homebrew/bin/bash
+
+readarray -d '' files < <(find ~+ -regextype egrep -regex '.+/src/main/resources/application.properties$' -print0)
+
+for file in "${files[@]}"; do
+
+	swaggerPath=$(grep -Pio '(?<=^springdoc\.swagger-ui\.path=).+[a-zA-Z\d]' $file | head -n 1)
+
+	swaggerPort=$(grep -Pio '(?<=^server.port=)\d+' $file | head -n 1)
+
+	if [[ "$swaggerPath" != "" ]]; then
+		if [[ "$swaggerPort" != "" ]]; then
+			echo "http://localhost:${swaggerPort}${swaggerPath}"
+		else
+			echo "http://localhost:port${swaggerPath}"
+		fi	
+	else
+		if [[ "$swaggerPort" != "" ]]; then
+			echo "http://localhost:${swaggerPort}/swagger-ui.html"
+		else
+			echo "http://localhost:port/swagger-ui.html"
+		fi	
+	fi
+done
