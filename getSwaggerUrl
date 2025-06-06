@@ -1,4 +1,4 @@
-#!/opt/homebrew/bin/bash
+#!/bin/bash
 
 readarray -d '' files < <(find ~+ -regextype egrep -regex '.+/src/main/resources/application.properties$' -print0)
 
